@@ -1,5 +1,6 @@
 package imgur.tests;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +16,17 @@ public class ImageTests extends BaseTest {
     void uploadCandyman() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .body(new File("src/test/resources/Candyman (600x950).jpeg"))
+                .contentType("multipart/form-data")
+                .multiPart("image", new File("src/test/resources/Candyman (600x950).jpeg"),"multipart/form-data")
+                .multiPart("title", "Candyman","multipart/form-data")
+                //.body(new File("src/test/resources/Candyman (600x950).jpeg"))
                 .expect()
                 .statusCode(200)
+                .body("success", CoreMatchers.is(true))
+                .body("data.width", CoreMatchers.equalTo(600))
+                .body("data.height", CoreMatchers.equalTo(950))
+                .body("data.title", CoreMatchers.equalTo("Candyman"))
+                .body("data.link", CoreMatchers.anything("data.id"))
                 .when()
                 .post("/image")
                 .prettyPeek()
@@ -26,7 +35,7 @@ public class ImageTests extends BaseTest {
     }
 
     @AfterEach
-    void tearDownCandyman() {
+    void tearDown() {
         given()
                 .header("Authorization", token)
                 .when()
