@@ -1,10 +1,7 @@
 package imgur.tests;
 
-import io.restassured.RestAssured;
 import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -35,7 +32,7 @@ public class ImageTests extends BaseTest {
                 .get("data.deletehash");
     }
 
-    @Test
+    @Test // Так и не смог разобраться почему этот тест падает(
     void uploadNonImage() {
         imageDeleteHash = given()
                 .header("Authorization", token)
