@@ -15,8 +15,12 @@ public abstract class BaseTest {
 
     @BeforeAll
     static void beforeAll() throws IOException {
-        properties = new Properties();
-        properties.load(new FileInputStream("src/test/resources/application.properties"));
+        properties=new Properties();
+        try {
+            properties.load(new FileInputStream("src/test/resources/application.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         host = properties.getProperty("host");
         username = properties.getProperty("username", "testprogmath");
         token = properties.getProperty("auth.token");
