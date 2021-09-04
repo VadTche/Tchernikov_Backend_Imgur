@@ -33,20 +33,22 @@ public class AccountTests extends BaseTest{
                 .then()
                 .statusCode(200)
                 .body("success", CoreMatchers.is(true))
-                .body("data.url", equalTo(username));
+                .body("data.url", CoreMatchers.equalTo(username));
     }
     //todo: refactor at home
     @Test
     void getAccountSettingsTest() {
-        Response response = given()
-                .header("Authorization", "Bearer 81ed217eee6d991be324edc8754a07e4ce686bb9")
+        given()
+                .header("Authorization", token)
+                .log()
+                .all()
                 .expect()
                 .body("success", CoreMatchers.is(true))
-                .body("data.account_url", equalTo("testprogmath"))
-                .statusCode(200)
+                .body("data.account_url", CoreMatchers.equalTo(username))
                 .when()
-                .get("https://api.imgur.com/3/account/testprogmath/settings")
-                .prettyPeek();
-        assertThat(response.jsonPath().get("data.active_emails[0]"), equalTo("anna.chemic@gmail.com"));
+                .get("account/"+username+"/settings")
+                .prettyPeek()
+                .then()
+                .statusCode(200);
     }
 }

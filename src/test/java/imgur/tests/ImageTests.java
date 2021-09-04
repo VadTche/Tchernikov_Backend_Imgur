@@ -12,10 +12,10 @@ public class ImageTests extends BaseTest {
     String imageDeleteHash;
 
     @Test
-    void uploadImageFileTest() {
+    void uploadCandyman() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .body(new File("src/test/resources/img.png"))
+                .body(new File("src/test/resources/Candyman (600x950).jpeg"))
                 .expect()
                 .statusCode(200)
                 .when()
@@ -26,7 +26,7 @@ public class ImageTests extends BaseTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDownCandyman() {
         given()
                 .header("Authorization", token)
                 .when()
