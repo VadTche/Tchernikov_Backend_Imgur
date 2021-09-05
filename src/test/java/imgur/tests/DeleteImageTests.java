@@ -14,7 +14,7 @@ public class DeleteImageTests extends BaseTest{
     void setUp() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .body(new File("src/test/resources/Spiderman (866x738).png"))
+                .body(new File("src/test/resources/Spiderman.png"))
                 .expect()
                 .statusCode(200)
                 .when()
