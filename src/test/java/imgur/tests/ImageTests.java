@@ -10,6 +10,7 @@ import static io.restassured.RestAssured.*;
 
 public class ImageTests extends BaseTest {
     String imageDeleteHash;
+    String imageHash;
 
     @Test
     void uploadCandyman() {
