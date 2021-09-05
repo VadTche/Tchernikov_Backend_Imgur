@@ -25,7 +25,7 @@ public class ImageTests extends BaseTest {
                 .body("data.width", CoreMatchers.equalTo(600))
                 .body("data.height", CoreMatchers.equalTo(950))
                 .body("data.title", CoreMatchers.equalTo("Candyman"))
-                .body("data.link", CoreMatchers.anything("data.id"))
+                .body("data.id", CoreMatchers.anything("data.link"))
                 .when()
                 .post("/image")
                 .prettyPeek()
