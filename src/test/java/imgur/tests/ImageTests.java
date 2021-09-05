@@ -16,9 +16,8 @@ public class ImageTests extends BaseTest {
     void uploadCandyman() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .contentType("multipart/form-data")
-                .multiPart("image", new File("src/test/resources/Candyman (600x950).jpeg"),"multipart/form-data")
-                .multiPart("title", "Candyman","multipart/form-data")
+                .multiPart("image", new File("src/test/resources/Candyman (600x950).jpeg"))
+                .multiPart("title", "Candyman")
                 .expect()
                 .statusCode(200)
                 .body("success", CoreMatchers.is(true))

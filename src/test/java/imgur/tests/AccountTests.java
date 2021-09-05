@@ -33,9 +33,9 @@ public class AccountTests extends BaseTest{
                 .then()
                 .statusCode(200)
                 .body("success", CoreMatchers.is(true))
-                .body("data.url", CoreMatchers.equalTo(username));
+                .body("data.url", equalTo(username));
     }
-    //todo: refactor at home
+
     @Test
     void getAccountSettingsTest() {
         given()
@@ -44,7 +44,7 @@ public class AccountTests extends BaseTest{
                 .all()
                 .expect()
                 .body("success", CoreMatchers.is(true))
-                .body("data.account_url", CoreMatchers.equalTo(username))
+                .body("data.account_url", equalTo(username))
                 .when()
                 .get("account/"+username+"/settings")
                 .prettyPeek()
