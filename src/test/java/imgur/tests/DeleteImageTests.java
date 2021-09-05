@@ -11,7 +11,7 @@ import static io.restassured.RestAssured.given;
 public class DeleteImageTests extends BaseTest{
     String imageDeleteHash;
     @BeforeEach
-    void setSpiderman() {
+    void setUp() {
         imageDeleteHash = given()
                 .header("Authorization", token)
                 .body(new File("src/test/resources/Spiderman (866x738).png"))
@@ -24,7 +24,7 @@ public class DeleteImageTests extends BaseTest{
     }
 
     @Test
-    void deleteSpiderman() {
+    void deleteExistentImageTest() {
         given()
                 .header("Authorization", token)
                 .when()
