@@ -131,7 +131,7 @@ public class ImageTests extends BaseTest {
                 .get("data.deletehash");
     }
 
-    @Test // Так и не смог разобраться почему этот тест падает(
+    @Test // Так и не смог разобраться почему этот тест падает с ошибками 500 и 255(
     void uploadNonImage() {
         imageDeleteHash = given()
                 .header("Authorization", token)
