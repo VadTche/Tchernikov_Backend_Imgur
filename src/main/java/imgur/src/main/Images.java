@@ -11,7 +11,6 @@ public enum Images {
     IMAGE_URL("https://refactoring.guru/images/content-public/logos/logo-covid-2x.png");
 
     private String path;
-
     Images(String path) {
         this.path = path;
     }

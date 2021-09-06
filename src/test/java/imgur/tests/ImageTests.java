@@ -1,33 +1,42 @@
 package imgur.tests;
 
+import io.restassured.specification.RequestSpecification;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static io.restassured.RestAssured.*;
+import static imgur.src.main.EndPoints.UPLOAD_IMAGE;
+import static imgur.src.main.Images.IMAGE_JPG_SMALL;
+import static io.restassured.RestAssured.given;
+
 
 public class ImageTests extends BaseTest {
     String imageDeleteHash;
-    String imageHash;
+    RequestSpecification multiPartReqSpec;
+    String base64Image;
+    RequestSpecification imageRequestSpecification;
+
 
     @Test
     void uploadCyrillic() {
         imageDeleteHash = given()
-                .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Candyman Кэндимен (600x950).jpeg"))
-                .multiPart("title", "Candyman")
+                .spec(requestSpecification)
+                .multiPart("image", IMAGE_JPG_SMALL.getPath())
+                //.multiPart("title", "Candyman")
                 .expect()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.width", CoreMatchers.equalTo(600))
-                .body("data.height", CoreMatchers.equalTo(950))
-                .body("data.title", CoreMatchers.equalTo("Candyman"))
-                .body("data.id", CoreMatchers.anything("data.link"))
+                .spec(positiveResponseSpecification)
+                //.body("data.width", CoreMatchers.equalTo(600))
+                //.body("data.height", CoreMatchers.equalTo(950))
+                //.body("data.title", CoreMatchers.equalTo("Candyman"))
+                //.body("data.id", CoreMatchers.anything("data.link"))
                 .when()
-                .post("/image")
+                .post(UPLOAD_IMAGE)
                 .prettyPeek()
+                .then()
+                .extract()
+                .response()
                 .jsonPath()
                 .get("data.deletehash");
     }

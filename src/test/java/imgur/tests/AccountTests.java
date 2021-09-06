@@ -1,39 +1,38 @@
 package imgur.tests;
 
 import io.restassured.RestAssured;
-import io.restassured.http.Method;
+import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import imgur.src.main.AccountResponse;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
+import static imgur.src.main.EndPoints.GET_ACCOUNT;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThan;
 
-public class AccountTests extends BaseTest{
+public class AccountTests extends BaseTest {
+    ResponseSpecification accountResponseSpec;
 
     @Test
     void getAccountPositiveTest() {
-        given()
-                .header("Authorization", token)
-                .log()
-                .method()
-                .log()
-                .uri()
-                .when()
-                .get( "account/{username}", username)
+        accountResponseSpec = positiveResponseSpecification
+                .expect()
+                .body("data.url", equalTo(username));
+
+        AccountResponse response = given(requestSpecification, accountResponseSpec)
+                .get(GET_ACCOUNT, username)
                 .prettyPeek()
                 .then()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.url", equalTo(username));
+                .extract()
+                .as(AccountResponse.class);
+        assertThat(response.getData().getId(), equalTo(userId));
     }
 
     @Test
