@@ -13,10 +13,10 @@ public class ImageTests extends BaseTest {
     String imageHash;
 
     @Test
-    void uploadCandyman() {
+    void uploadCyrillic() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Candyman (600x950).jpeg"))
+                .multiPart("image", new File("src/test/resources/Candyman Кэндимен (600x950).jpeg"))
                 .multiPart("title", "Candyman")
                 .expect()
                 .statusCode(200)
@@ -32,10 +32,10 @@ public class ImageTests extends BaseTest {
                 .get("data.deletehash");
     }
     @Test
-    void uploadFantasyWorlds() {
+    void uploadOneHundredSymbols() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Fantasy Worlds (1600x900).jpeg"))
+                .multiPart("image", new File("src/test/resources/Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Worlds (1600x900).jpeg"))
                 .multiPart("title", "Fantasy Worlds")
                 .expect()
                 .statusCode(200)
@@ -72,10 +72,10 @@ public class ImageTests extends BaseTest {
     }
 
     @Test
-    void uploadAutumn() {
+    void uploadNonLetters() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Autumn.gif"))
+                .multiPart("image", new File("src/test/resources/@*&%$#.gif"))
                 .multiPart("title", "Autumn")
                 .expect()
                 .statusCode(200)
@@ -92,10 +92,10 @@ public class ImageTests extends BaseTest {
     }
 
     @Test
-    void uploadSample() {
+    void uploadOneLetterName() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Sample.bmp"))
+                .multiPart("image", new File("src/test/resources/S.bmp"))
                 .multiPart("title", "Sample")
                 .expect()
                 .statusCode(200)
@@ -131,7 +131,7 @@ public class ImageTests extends BaseTest {
                 .get("data.deletehash");
     }
 
-    @Test // Так и не смог разобраться почему этот тест падает с ошибками 500 и 255(
+    @Test // Так и не смог разобраться почему этот тест в Postman проходит с ошибкой 400, а здесь падает с ошибками 500 и 255(
     void uploadNonImage() {
         imageDeleteHash = given()
                 .header("Authorization", token)
