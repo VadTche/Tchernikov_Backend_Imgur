@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.lessThan;
 
 public abstract class BaseTest {
     static Properties properties;
@@ -23,20 +24,26 @@ public abstract class BaseTest {
     static Integer userId;
 
     static ResponseSpecification positiveResponseSpecification;
-
+    static ResponseSpecification negativeResponseSpecification;
     static RequestSpecification requestSpecification;
 
     @BeforeAll
     static void beforeAll() throws IOException {
 
-
         positiveResponseSpecification = new ResponseSpecBuilder()
-//                .expectResponseTime(lessThan(1500L))
+                .expectResponseTime(lessThan(9000L))
                 .expectStatusCode(200)
                 .expectBody("success", CoreMatchers.is(true))
                 .expectBody("status", equalTo(200))
                 .build();
 
+        negativeResponseSpecification = new ResponseSpecBuilder()
+                .expectResponseTime(lessThan(9000L))
+                .expectStatusCode(400)
+                .expectBody("success", CoreMatchers.is(false))
+                .expectBody("status", equalTo(400))
+                .expectBody("data.error.message", equalTo("File type invalid (1)"))
+                .build();
 
         properties = new Properties();
         properties.load(new FileInputStream("src/test/resources/application.properties"));
@@ -44,8 +51,6 @@ public abstract class BaseTest {
         username = properties.getProperty("username", "testprogmath");
         token = properties.getProperty("auth.token");
         userId = Integer.valueOf(properties.getProperty("user.id"));
-
-
 
         RestAssured.baseURI = host;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -56,12 +61,7 @@ public abstract class BaseTest {
                 .log(LogDetail.METHOD)
                 .build();
 
-
-
         RestAssured.responseSpecification = positiveResponseSpecification;
 //        RestAssured.requestSpecification = requestSpecification;
-
-
-
     }
 }

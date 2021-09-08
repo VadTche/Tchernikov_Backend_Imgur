@@ -11,6 +11,7 @@ import java.io.File;
 
 import static imgur.src.main.EndPoints.UPLOAD_IMAGE;
 import static imgur.src.main.Images.IMAGE_URL;
+import static imgur.src.main.Images.NON_IMAGE_PDF;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -63,123 +64,25 @@ public class ImageTests extends BaseTest {
                 .jsonPath()
                 .get("data.deletehash");
     }
-/*
-    @Test
-    void uploadOneHundredSymbols() {
-        imageDeleteHash = given()
-                .header("Authorization", token)
-                .multiPart("image", IMAGE_JPG_SMALL.getPath())
-                .multiPart("title", "Fantasy Worlds")
-                .expect()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.width", CoreMatchers.equalTo(1600))
-                .body("data.height", CoreMatchers.equalTo(900))
-                .body("data.title", CoreMatchers.equalTo("Fantasy Worlds"))
-                .body("data.id", CoreMatchers.anything("data.link"))
-                .when()
-                .post("/image")
-                .prettyPeek()
-                .jsonPath()
-                .get("data.deletehash");
-    }
 
-    @Test
-    void uploadBullets() {
-        imageDeleteHash = given()
-                .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Bullets_(3840x2160).jpeg"))
-                .multiPart("title", "Bullets")
-                .expect()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.width", CoreMatchers.equalTo(3840))
-                .body("data.height", CoreMatchers.equalTo(2160))
-                .body("data.title", CoreMatchers.equalTo("Bullets"))
-                .body("data.id", CoreMatchers.anything("data.link"))
-                .when()
-                .post("/image")
-                .prettyPeek()
-                .jsonPath()
-                .get("data.deletehash");
-    }
-
-    @Test
-    void uploadNonLetters() {
-        imageDeleteHash = given()
-                .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/@*&%$#.gif"))
-                .multiPart("title", "Autumn")
-                .expect()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.width", CoreMatchers.equalTo(360))
-                .body("data.height", CoreMatchers.equalTo(640))
-                .body("data.title", CoreMatchers.equalTo("Autumn"))
-                .body("data.id", CoreMatchers.anything("data.link"))
-                .when()
-                .post("/image")
-                .prettyPeek()
-                .jsonPath()
-                .get("data.deletehash");
-    }
-
-    @Test
-    void uploadOneLetterName() {
-        imageDeleteHash = given()
-                .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/S.bmp"))
-                .multiPart("title", "Sample")
-                .expect()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.width", CoreMatchers.equalTo(1280))
-                .body("data.height", CoreMatchers.equalTo(853))
-                .body("data.title", CoreMatchers.equalTo("Sample"))
-                .body("data.id", CoreMatchers.anything("data.link"))
-                .when()
-                .post("/image")
-                .prettyPeek()
-                .jsonPath()
-                .get("data.deletehash");
-    }
-
-    @Test
-    void uploadSpiderman() {
-        imageDeleteHash = given()
-                .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Человек_Паук.png"))
-                .multiPart("title", "Spiderman")
-                .expect()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
-                .body("data.width", CoreMatchers.equalTo(866))
-                .body("data.height", CoreMatchers.equalTo(738))
-                .body("data.title", CoreMatchers.equalTo("Spiderman"))
-                .body("data.id", CoreMatchers.anything("data.link"))
-                .when()
-                .post("/image")
-                .prettyPeek()
-                .jsonPath()
-                .get("data.deletehash");
-    }
 
     @Test // Так и не смог разобраться почему этот тест в Postman проходит с ошибкой 400, а здесь падает с ошибками 500 и 255(
-    void uploadNonImage() {
+    void uploadNonImageTest() {
         imageDeleteHash = given()
-                .header("Authorization", token)
-                .body(new File("src/test/resources/patroni.pdf"))
+                .spec(requestSpecification)
+                .multiPart("image", new File(NON_IMAGE_PDF.getPath()))
                 .expect()
-                .statusCode(400)
-                .body("success", CoreMatchers.is(false))
-                .body("data.error", CoreMatchers.equalTo("Could not process upload!"))
+                .spec(negativeResponseSpecification)
                 .when()
-                .post("/image")
+                .post(UPLOAD_IMAGE)
                 .prettyPeek()
+                .then()
+                .extract()
+                .response()
                 .jsonPath()
                 .get("data.deletehash");
     }
-*/
+
     @AfterEach
     void tearDown() {
         given()
