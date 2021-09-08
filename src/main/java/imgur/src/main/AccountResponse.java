@@ -1,11 +1,9 @@
 package imgur.src.main;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.Data;
+//import lombok.Data;
 
-@Data
+//@Data
 public class AccountResponse {
 
     @JsonProperty("data")
@@ -15,7 +13,7 @@ public class AccountResponse {
     @JsonProperty("status")
     private Integer status;
 
-    @lombok.Data
+    //@lombok.Data
     public static class Data {
 
         @JsonProperty("id")
@@ -47,7 +45,7 @@ public class AccountResponse {
 
     }
 
-    @lombok.Data
+    //@lombok.Data
     public static class UserFollow {
 
         @JsonProperty("status")

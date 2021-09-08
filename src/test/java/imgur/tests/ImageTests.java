@@ -1,15 +1,18 @@
 package imgur.tests;
 
+import imgur.src.main.Images;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.File;
 
 import static imgur.src.main.EndPoints.UPLOAD_IMAGE;
-import static imgur.src.main.Images.IMAGE_JPG_SMALL;
+import static imgur.src.main.Images.IMAGE_URL;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class ImageTests extends BaseTest {
@@ -18,19 +21,39 @@ public class ImageTests extends BaseTest {
     String base64Image;
     RequestSpecification imageRequestSpecification;
 
+    //@BeforeEach
+    //void setUp() throws IOException {
+        //byte[] imageBytesArray = FileUtils.readFileToByteArray(new File(image.getPath()));
+        //base64Image = Base64.getEncoder().encodeToString(imageBytesArray);
+
+    @ParameterizedTest
+    @EnumSource(value = Images.class, names = {"IMAGE_JPG_ORDINARY", "IMAGE_JPG_SMALL", "IMAGE_JPG_HD",
+                                                "IMAGE_GIF", "IMAGE_BMP", "IMAGE_PNG", "IMAGE_PNG_1x1",
+                                                "IMAGE_PNG_LESS_ONE_KB", "IMAGE_TIFF"})
+    void uploadImageWithAllowedFormat(@org.jetbrains.annotations.NotNull Images image) {
+        imageDeleteHash=  given()
+                .headers("Authorization", token)
+                .multiPart("image", new File(image.getPath()))
+                .expect()
+                .body("data.type", equalTo(image.getFormat()))
+                .when()
+                .post(UPLOAD_IMAGE)
+                .prettyPeek()
+                .then()
+                .extract()
+                .response()
+                .jsonPath()
+                .getString("data.deletehash");
+    }
+
 
     @Test
-    void uploadCyrillic() {
+    void uploadUrlTest() {
         imageDeleteHash = given()
                 .spec(requestSpecification)
-                .multiPart("image", IMAGE_JPG_SMALL.getPath())
-                //.multiPart("title", "Candyman")
+                .multiPart("image", IMAGE_URL.getPath())
                 .expect()
                 .spec(positiveResponseSpecification)
-                //.body("data.width", CoreMatchers.equalTo(600))
-                //.body("data.height", CoreMatchers.equalTo(950))
-                //.body("data.title", CoreMatchers.equalTo("Candyman"))
-                //.body("data.id", CoreMatchers.anything("data.link"))
                 .when()
                 .post(UPLOAD_IMAGE)
                 .prettyPeek()
@@ -40,11 +63,12 @@ public class ImageTests extends BaseTest {
                 .jsonPath()
                 .get("data.deletehash");
     }
+/*
     @Test
     void uploadOneHundredSymbols() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Worlds (1600x900).jpeg"))
+                .multiPart("image", IMAGE_JPG_SMALL.getPath())
                 .multiPart("title", "Fantasy Worlds")
                 .expect()
                 .statusCode(200)
@@ -64,7 +88,7 @@ public class ImageTests extends BaseTest {
     void uploadBullets() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Bullets (3840x2160).jpeg"))
+                .multiPart("image", new File("src/test/resources/Bullets_(3840x2160).jpeg"))
                 .multiPart("title", "Bullets")
                 .expect()
                 .statusCode(200)
@@ -124,7 +148,7 @@ public class ImageTests extends BaseTest {
     void uploadSpiderman() {
         imageDeleteHash = given()
                 .header("Authorization", token)
-                .multiPart("image", new File("src/test/resources/Spiderman.png"))
+                .multiPart("image", new File("src/test/resources/Человек_Паук.png"))
                 .multiPart("title", "Spiderman")
                 .expect()
                 .statusCode(200)
@@ -155,7 +179,7 @@ public class ImageTests extends BaseTest {
                 .jsonPath()
                 .get("data.deletehash");
     }
-
+*/
     @AfterEach
     void tearDown() {
         given()
