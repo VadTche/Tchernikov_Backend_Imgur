@@ -10,8 +10,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import java.io.File;
 
 import static imgur.src.main.EndPoints.UPLOAD_IMAGE;
-import static imgur.src.main.Images.IMAGE_URL;
-import static imgur.src.main.Images.NON_IMAGE_PDF;
+import static imgur.src.main.Images.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -29,13 +28,14 @@ public class ImageTests extends BaseTest {
 
     @ParameterizedTest
     @EnumSource(value = Images.class, names = {"IMAGE_JPG_ORDINARY", "IMAGE_JPG_SMALL", "IMAGE_JPG_HD",
-                                                "IMAGE_GIF", "IMAGE_BMP", "IMAGE_PNG", "IMAGE_PNG_1x1",
-                                                "IMAGE_PNG_LESS_ONE_KB", "IMAGE_TIFF"})
+            "IMAGE_GIF", "IMAGE_BMP", "IMAGE_PNG", "IMAGE_PNG_1x1",
+            "IMAGE_PNG_LESS_ONE_KB", "IMAGE_TIFF"})
     void uploadImageWithAllowedFormat(@org.jetbrains.annotations.NotNull Images image) {
         imageDeleteHash=  given()
-                .headers("Authorization", token)
+                .spec(requestSpecification)
                 .multiPart("image", new File(image.getPath()))
                 .expect()
+                .spec(positiveResponseSpecification)
                 .body("data.type", equalTo(image.getFormat()))
                 .when()
                 .post(UPLOAD_IMAGE)
@@ -46,7 +46,6 @@ public class ImageTests extends BaseTest {
                 .jsonPath()
                 .getString("data.deletehash");
     }
-
 
     @Test
     void uploadUrlTest() {
@@ -66,9 +65,21 @@ public class ImageTests extends BaseTest {
     }
 
 
-    @Test // Так и не смог разобраться почему этот тест в Postman проходит с ошибкой 400, а здесь падает с ошибками 500 и 255(
+    /*------------------------------------------------------------------------------
+    Имеется ли возможность эти ассершены двух негативных тестов ниже завести в negativeResponseSpecification?
+
+    java.lang.AssertionError: 2 expectations failed.
+    JSON path success doesn't match.
+    Expected: is <true>
+    Actual: <false>
+
+    JSON path status doesn't match.
+    Expected: <200>
+    Actual: <400>
+    ------------------------------------------------------------------------------*/
+    @Test
     void uploadNonImageTest() {
-        imageDeleteHash = given()
+        given()
                 .spec(requestSpecification)
                 .multiPart("image", new File(NON_IMAGE_PDF.getPath()))
                 .expect()
@@ -79,8 +90,23 @@ public class ImageTests extends BaseTest {
                 .then()
                 .extract()
                 .response()
-                .jsonPath()
-                .get("data.deletehash");
+                .jsonPath();
+    }
+
+    @Test
+    void uploadOverSizeTest() {
+        given()
+                .spec(requestSpecification)
+                .multiPart("image", new File(IMAGE_JPG_OVER_SIZE.getPath()))
+                .expect()
+                .spec(negativeResponseSpecification)
+                .when()
+                .post(UPLOAD_IMAGE)
+                .prettyPeek()
+                .then()
+                .extract()
+                .response()
+                .jsonPath();
     }
 
     @AfterEach
