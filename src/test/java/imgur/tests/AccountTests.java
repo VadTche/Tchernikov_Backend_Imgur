@@ -2,9 +2,11 @@ package imgur.tests;
 
 import io.restassured.specification.ResponseSpecification;
 import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static imgur.src.main.EndPoints.GET_ACCOUNT;
+import static imgur.src.main.EndPoints.GET_ACCOUNT_SETTINGS;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -26,6 +28,8 @@ public class AccountTests extends BaseTest {
         //assertThat(response.getData().getId(), equalTo(userId));
     }
 
+
+    @BeforeEach
     @Test
     void getAccountSettingsTest() {
         given()
@@ -36,7 +40,7 @@ public class AccountTests extends BaseTest {
                 .body("success", CoreMatchers.is(true))
                 .body("data.account_url", equalTo(username))
                 .when()
-                .get("account/"+username+"/settings")
+                .get(GET_ACCOUNT_SETTINGS)
                 .prettyPeek()
                 .then()
                 .statusCode(200);

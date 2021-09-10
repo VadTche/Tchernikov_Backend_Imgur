@@ -24,13 +24,13 @@ public class ImageTests extends BaseTest {
     //@BeforeEach
     //void setUp() throws IOException {
         //byte[] imageBytesArray = FileUtils.readFileToByteArray(new File(image.getPath()));
-        //base64Image = Base64.getEncoder().encodeToString(imageBytesArray);
+        //base64Image = Base64.getEncoder().encodeToString(imageBytesArray);}
 
     @ParameterizedTest
     @EnumSource(value = Images.class, names = {"IMAGE_JPG_ORDINARY", "IMAGE_JPG_SMALL", "IMAGE_JPG_HD",
             "IMAGE_GIF", "IMAGE_BMP", "IMAGE_PNG", "IMAGE_PNG_1x1",
             "IMAGE_PNG_LESS_ONE_KB", "IMAGE_TIFF"})
-    void uploadImageWithAllowedFormat(@org.jetbrains.annotations.NotNull Images image) {
+    void uploadAllowedFormatTest(@org.jetbrains.annotations.NotNull Images image) {
         imageDeleteHash=  given()
                 .spec(requestSpecification)
                 .multiPart("image", new File(image.getPath()))
