@@ -1,19 +1,28 @@
 package imgur.src.main;
 
 public enum Images {
-    IMAGE_GIF("src/test/resources/@*&%$#.gif"),
-    IMAGE_JPG_BIG("src/test/resources/Bullets (3840x2160).jpeg"),
-    IMAGE_JPG_SMALL("src/test/resources/Candyman Кэндимен (600x950).jpeg"),
-    IMAGE_JPG_AVERAGE("src/test/resources/Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Fantasy Worlds (1600x900).jpeg"),
-    NON_IMAGE_PDF("src/test/resources/patroni.pdf"),
-    IMAGE_BMP("src/test/resources/S.bmp"),
-    IMAGE_PNG("src/test/resources/Spiderman.png"),
-    IMAGE_URL("https://refactoring.guru/images/content-public/logos/logo-covid-2x.png");
+    IMAGE_JPG_ORDINARY("src/test/resources/Candyman.jpeg", "image/jpeg"),
+    IMAGE_JPG_SMALL("src/test/resources/Big_name_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Fantasy_Worlds_(1600x900).jpeg", "image/jpeg"),
+    IMAGE_JPG_HD("src/test/resources/Bullets_(3840x2160).jpeg", "image/jpeg"),
+    IMAGE_JPG_OVER_SIZE("src/test/resources/foto_21mb.jpeg", "image/jpeg"),
+    NON_IMAGE_PDF("src/test/resources/patroni.pdf", "image/pdf"),
+    IMAGE_GIF("src/test/resources/@*&%$#.gif", "image/gif"),
+    IMAGE_BMP("src/test/resources/S.bmp", "image/bmp"),
+    IMAGE_PNG("src/test/resources/Человек_Паук.png", "image/png"),
+    IMAGE_PNG_1x1("src/test/resources/1x1.png", "image/png"),
+    IMAGE_PNG_LESS_ONE_KB("src/test/resources/black-and-white.png", "image/png"),
+    IMAGE_TIFF("src/test/resources/Example.tiff", "image/tiff"),
+    IMAGE_URL("https://storge.pic2.me/c/1360x800/251/61351405e08d91.35356004.jpg", "image/url");
 
-    private String path;
-
-    Images(String path) {
+    private final String path;
+    private final String format;
+    Images(String path, String format) {
         this.path = path;
+        this.format = format;
+    }
+
+    public String getFormat() {
+        return format;
     }
 
     public String getPath() {

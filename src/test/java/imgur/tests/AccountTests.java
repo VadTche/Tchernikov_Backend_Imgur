@@ -1,41 +1,35 @@
 package imgur.tests;
 
-import io.restassured.RestAssured;
-import io.restassured.http.Method;
-import io.restassured.response.Response;
+import io.restassured.specification.ResponseSpecification;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
+import static imgur.src.main.EndPoints.GET_ACCOUNT;
+import static imgur.src.main.EndPoints.GET_ACCOUNT_SETTINGS;
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 
-public class AccountTests extends BaseTest{
+public class AccountTests extends BaseTest {
+    ResponseSpecification accountResponseSpec;
 
     @Test
     void getAccountPositiveTest() {
-        given()
-                .header("Authorization", token)
-                .log()
-                .method()
-                .log()
-                .uri()
-                .when()
-                .get( "account/{username}", username)
-                .prettyPeek()
-                .then()
-                .statusCode(200)
-                .body("success", CoreMatchers.is(true))
+        accountResponseSpec = positiveResponseSpecification
+                .expect()
                 .body("data.url", equalTo(username));
+
+        given(requestSpecification, positiveResponseSpecification)
+                .get(GET_ACCOUNT, username)
+                .prettyPeek();
+                //.then()
+                //.extract()
+                //.as(AccountResponse.class);
+        //assertThat(response.getData().getId(), equalTo(userId));
     }
 
+
+    @BeforeEach
     @Test
     void getAccountSettingsTest() {
         given()
@@ -46,7 +40,7 @@ public class AccountTests extends BaseTest{
                 .body("success", CoreMatchers.is(true))
                 .body("data.account_url", equalTo(username))
                 .when()
-                .get("account/"+username+"/settings")
+                .get(GET_ACCOUNT_SETTINGS)
                 .prettyPeek()
                 .then()
                 .statusCode(200);

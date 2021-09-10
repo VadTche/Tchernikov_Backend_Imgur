@@ -6,27 +6,50 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static imgur.src.main.EndPoints.UPLOAD_IMAGE;
+import static imgur.src.main.Images.IMAGE_JPG_ORDINARY;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
 
 public class DeleteImageTests extends BaseTest{
+
     String imageDeleteHash;
+    String imageDeleteId;
+
     @BeforeEach
     void setUp() {
         imageDeleteHash = given()
-                .header("Authorization", token)
-                .body(new File("src/test/resources/Spiderman.png"))
+                .spec(requestSpecification)
+                .multiPart("image", new File(IMAGE_JPG_ORDINARY.getPath()))
                 .expect()
-                .statusCode(200)
+                .spec(positiveResponseSpecification)
+                .body("data.type", equalTo(IMAGE_JPG_ORDINARY.getFormat()))
                 .when()
-                .post("/image")
+                .post(UPLOAD_IMAGE)
+                .prettyPeek()
+                .then()
+                .extract()
+                .response()
                 .jsonPath()
-                .get("data.deletehash");
+                .getString("data.deletehash");
     }
 
     @Test
-    void deleteExistentImageTest() {
+    void deleteExistentAuthTest() {
         given()
-                .header("Authorization", token)
+                .spec(requestSpecification)
+                .when()
+                .delete("image/{imageHash}", imageDeleteHash)
+                .prettyPeek()
+                .then()
+                .statusCode(200)
+                .body("success", CoreMatchers.is(true));
+    }
+
+    @Test
+    void deleteExistentNonAuthTest() {//совсем запутался тут с авторизацией по id)
+        given()
+                .header("Authorization", userId)
                 .when()
                 .delete("image/{imageHash}", imageDeleteHash)
                 .prettyPeek()
