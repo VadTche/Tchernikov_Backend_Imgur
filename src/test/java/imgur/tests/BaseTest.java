@@ -42,7 +42,7 @@ public abstract class BaseTest {
                 .expectStatusCode(400)
                 .expectBody("success", CoreMatchers.is(false))
                 .expectBody("status", equalTo(400))
-                .expectBody("data.error.message", equalTo("File type invalid (1)"))
+                //.expectBody("data.error.message", equalTo("File type invalid (1)"))
                 .build();
 
         properties = new Properties();
