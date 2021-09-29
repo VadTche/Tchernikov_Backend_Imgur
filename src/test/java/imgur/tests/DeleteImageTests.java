@@ -8,9 +8,7 @@ import java.io.File;
 
 import static imgur.src.main.EndPoints.UPLOAD_IMAGE;
 import static imgur.src.main.Images.IMAGE_JPG_ORDINARY;
-import static imgur.src.main.Images.IMAGE_JPG_SMALL;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
 
 public class DeleteImageTests extends BaseTest{
 
@@ -21,19 +19,12 @@ public class DeleteImageTests extends BaseTest{
         imageDeleteHash = given()
                 .spec(requestSpecification)
                 .multiPart("image", new File(IMAGE_JPG_ORDINARY.getPath()))
-                .expect()
-                .spec(positiveResponseSpecification)
-                .body("data.type", equalTo(IMAGE_JPG_ORDINARY.getFormat()))
                 .when()
                 .post(UPLOAD_IMAGE)
-                .prettyPeek()
-                .then()
-                .extract()
-                .response()
                 .jsonPath()
                 .getString("data.deletehash");
     }
-
+    //авторизация по токену
     @Test
     void deleteExistentAuthTest() {
         given()
@@ -46,7 +37,8 @@ public class DeleteImageTests extends BaseTest{
                 .body("success", CoreMatchers.is(true));
     }
 
- /*   @Test //совсем запутался тут с авторизацией по id)
+    //авторизация по id, совсем запутался тут)
+ /*   @Test
     void deleteExistentNonAuthTest() {
         given()
                 .header("Authorization", userId)
