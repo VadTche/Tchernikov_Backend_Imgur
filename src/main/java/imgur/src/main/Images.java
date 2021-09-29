@@ -9,7 +9,6 @@ public enum Images {
     IMAGE_GIF("src/test/resources/@*&%$#.gif", "image/gif"),
     IMAGE_BMP("src/test/resources/S.bmp", "image/bmp"),
     IMAGE_PNG("src/test/resources/Человек_Паук.png", "image/png"),
-    IMAGE_PNG_1x1("src/test/resources/1x1.png", "image/png"),
     IMAGE_PNG_LESS_ONE_KB("src/test/resources/black-and-white.png", "image/png"),
     IMAGE_TIFF("src/test/resources/Example.tiff", "image/tiff"),
     IMAGE_URL("https://storge.pic2.me/c/1360x800/251/61351405e08d91.35356004.jpg", "image/url");
